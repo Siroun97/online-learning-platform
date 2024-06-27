@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Data in Console</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+This is the display page
+<p>What happens next?</p>
+<button id="btn1">Read All</button>
+<button id="btn2">Read first One</button>
+<script>
+    
+    $(document).ready(function(){    
+        const btn2=document.getElementById("btn2")
+        const btn1=document.getElementById("btn1")                   //$ is always for JQUERY,its the selector
+       btn1.addEventListener("click",function(){
+        $.ajax({
+            url: 'course.php?x=readAll', // Update with your PHP file that fetches data
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Log the received data to the console
+                console.log(data);
+                console.log("success")
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr.responseText);
+                console.log("failed")
+            }
+        });
+        })
+        // Make AJAX request to fetch data from server
+      
+btn2.addEventListener("click",function(){
+    $.ajax({
+            url: 'course.php?x=readOne&y=1', // Update with your PHP file that fetches data
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Log the received data to the console
+                console.log(data);
+                console.log("success")
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr.responseText);
+                console.log("failed")
+            }
+        });
+})
+        // Make AJAX request to fetch data from server
+        
+    });
+    
+</script>
+
+</body>
+</html>
