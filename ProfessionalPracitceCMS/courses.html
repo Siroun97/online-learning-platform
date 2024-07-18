@@ -256,6 +256,7 @@ console.log(trainerId);
                     url: url + "vwCourses.php?status=coursesByTRainer&trainerId="+trainerId,
                     "dataSrc": "",
                     type: "POST",
+                    dataType:'json'
                 },
                 destroy: true,
                 "deferRender": true,
@@ -292,11 +293,7 @@ console.log(trainerId);
                 $('#nbrOfPortals').html(n);
             }
 
-            $('#myModal').on('shown.bs.modal', function () {
-                // Set focus to the input when the modal is shown and select the text
-                $('#courseName').focus();
-                $('#courseName').select();
-            });
+           
 
             $('#tbl tbody').on('click', '.edit', function () {
                 // get the id value stored in the edit button
@@ -306,7 +303,7 @@ console.log(trainerId);
                 // var rowData = row.data();
                 // console.log(rowData);
                 // displayPortal(id, rowData.courseName,trainerId)
-                console.log("Trainer ID:", trainerId);
+               
                 window.location.href = 'instructor-edit-course.html?trainerId=' + trainerId + '&courseId=' + id;
 
 
@@ -333,94 +330,13 @@ console.log(trainerId);
 
             $('#btnAdd').on('click', function () {
                // displayPortal(-1, '', trainerId)
-               window.location.href = 'instructor-edit-course.html';
+               window.location.href = 'instructor-edit-course.html?trainerId='+trainerId;
 
             })
 
-            function displayPortal(courseId, courseName,trainerId) {
-                $('#courseId').val(courseId);
-                $('#courseName').val(courseName);
-                $('#trainerId').val(trainerId);
-            //    $('#isActive').val(isActive);
-            //     var icon = document.getElementById('icon');
-            //     if (isActive == 1) {
-            //         icon.classList.remove('fa-times');
-            //         icon.classList.add('fa-check');
-            //     } else {
-            //         icon.classList.add('fa-times');
-            //         icon.classList.remove('fa-check');
-            //     }
+       
 
-            }
-
-            $('#myForm').on('submit', function (e) {
-                e.preventDefault()
-                // var checkbox = document.getElementById('isActive');
-                // checkbox.value = checkbox.checked ? '0' : '1';
-                // str = decodeURIComponent($('#myForm').serialize());
-                var formData = new FormData(this)
-                // if (checkbox.value == 1) {
-                //     str += "&isActive=" + '1'
-                // }
-                // console.log(checkbox.value);
-
-                var id = $('#courseId').val();	// get the value of the id  input text that is hidden in the modal form
-               console.log(id)
-                var status = (id == -1) ? 'new' : 'update';
-                console.log(status)
-                // str += "&status=" + status;
-               
-                formData.append('status', status)
-
-                // console.log(str);
-                /////////////////////
-                // call the php api to update or insert the data
-                $.ajax({
-                    url: url + 'vwCourses.php', data: formData, type: 'post', dataType: 'json',
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        // create a new row with the data returned from api
-
-                        console.log("id",id);
-                        if (id == -1) {
-                            var newRowData = {
-                                courseId: response.courseId,
-                                courseName: $('#courseName').val(),
-                                trainerId: $('#trainerId').val()
-
-                            }
-                           
-                            // if the operation is insert then add the row to the data table
-                            dataTable.row.add(newRowData).draw();
-                        } else {
-                            
-                            // if it is update then modify the row in the data table
-                            // first get the row index of the row that contains the id
-                            var newRowData = {
-                                courseId: id,
-                                courseName: $('#courseName').val(),
-                                trainerId: $('#trainerId').val()
-                              //  isActive: $('#isActive').val(),
-                            }
-                            
-                            
-                            //console.log(rowIndex);
-                            var rowId = dataTable.row(function (idx, data, node) {
-                                return data['courseId'] == id;
-                            });
-                            //console.log(rowId);
-                            var rowIndex = rowId[0][0]
-                            dataTable.row(rowIndex).data(newRowData).draw();
-                        }
-                        $('#myModal').modal('hide');
-
-                    },
-                    error: function(xhr) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            })
+       
         });
 
     </script>

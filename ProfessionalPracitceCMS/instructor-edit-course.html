@@ -288,7 +288,7 @@
                                                            class="form-control"
                                                            name="price"
                                                            id="price"
-                                                           value="24">
+                                                           value="">
                                                 </div>
                                             </div>
                                         </div>
@@ -388,7 +388,7 @@
         const urlParams = new URLSearchParams(window.location.search);
     
         // Get the value of the 'trainerId' parameter
-        //const trainerId = urlParams. get('trainerId');
+        const trainerId = urlParams. get('trainerId');
     
         // Get the value of the 'courseId' parameter
         const courseId = urlParams.get('courseId');
@@ -403,7 +403,16 @@
                 price:price,
                  portalId: portalId
         } 
-        console.log(data);
+        const data1={
+            courseName:courseName,
+                description:description,
+                price:price,
+                 portalId: portalId,
+                 trainerId:trainerId
+        }
+        console.log(data1);
+
+        if(courseId){
     $.ajax({
         url: 'api/vwCourses.php?status=update', // Server-side script to fetch portal names
         method: 'POST',
@@ -422,7 +431,27 @@
             $('#portalName').append('<option value="">Error fetching portals</option>');
         }
     });
-
+        }
+        else{
+            $.ajax({
+        url: 'api/vwCourses.php?status=new', // Server-side script to fetch portal names
+        method: 'POST',
+        data: data1,
+        // required parameters
+        success: function(response) {
+            // Parse the JSON response
+            console.log("successful new"+response);
+           
+            } ,
+        
+        error: function(xhr) {
+            console.error(xhr.responseText);
+          
+            // Handle error gracefully
+          
+        }
+    });
+        }
 
 
 
@@ -446,6 +475,7 @@
                 // Iterate through the portal names and populate the dropdown
                 data.forEach(function(item) {
                     $('#portalName').append(`<option value="${item.portalId}">${item.portalName}</option>`);
+                   
                 });
             } else {
                 // Handle empty or missing portal names
@@ -468,7 +498,7 @@
 
         function populateCourseName() {
             // Check if courseId is not null
-            if (courseId) {
+          
                 $.ajax({
                     url: 'api/vwCourses.php', // Server-side script to fetch course name
                     method: 'GET',
@@ -480,9 +510,30 @@
                         var data = JSON.parse(response);
 
 // Check if data is not empty and has courseName
+var x=data[0].portalId;
 if (data.length > 0) {
+   
+    $.ajax({
+      url: 'api/webCoursePortal.php?status=one',
+      data:{portalId: data[0].portalId},
+     
+      method: 'GET',
+      success: function(portalResponse) {
+        var portalData = JSON.parse(portalResponse);
+        if (portalData.length > 0) {
+          // Set the selected option in the dropdown
+          $('#portalName option[value="' + portalData[0].portalId + '"]').prop('selected', true);
+        } else {
+          console.warn("Couldn't find portal details for course");
+        }
+      },
+      error: function(xhr) {
+        console.error(xhr.responseText);
+      }
+    });
+    
     $('#courseName').val(data[0].courseName);
-
+    
     // Set description if available
     if (data[0].description !== undefined && data[0].description !== null) {
         $('#description').val(data[0].description);
@@ -492,6 +543,7 @@ if (data.length > 0) {
     if (data[0].price !== undefined) {
         $('#price').val(data[0].price);
     }
+   
 } else {
     // Handle empty or missing courseName
     $('#courseName').val('Error: Course data not found');
@@ -505,16 +557,19 @@ if (data.length > 0) {
                         $('#courseName').val('Error: Unable to fetch course name');
                     }
                 });
-            } else {
-                // Handle courseId not found
-                $('#courseName').val('Error: courseId not found');
-            }
+           
         }
+
+
         $(document).ready(function() {
-            populateCourseName();
             populatePortalName();
+            if(courseId){
+            populateCourseName();
+           }
+          
             $('#saveChangesBtn').click(function() {
             saveChanges();
+            window.location.href='courses.html?trainerId='+trainerId;
     });
 
         });

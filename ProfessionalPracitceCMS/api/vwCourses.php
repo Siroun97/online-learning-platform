@@ -32,7 +32,7 @@
     }
     if ($status == 'one') {
         $courseId= $_REQUEST['courseId'];
-        $query = "SELECT courseName,description,price FROM course WHERE courseId =$courseId";
+        $query = "SELECT courseName,description,price,portalId FROM course WHERE courseId =$courseId";
         $result = sqlsrv_query($conn, $query, array(), array("Scrollable" => "static")) or die(print_r(sqlsrv_errors(), true));
             
         $arr = array();
@@ -54,12 +54,16 @@
   return ;
   }
   
+   
   if ($status == "new")
 
   { $courseName = $_REQUEST['courseName'];
+    $description= $_REQUEST["description"];
+    $price = $_REQUEST["price"];
+    $portalId=$_REQUEST["portalId"];
     $trainerId = $_REQUEST['trainerId'];
    
-    $query = "INSERT INTO course (courseName,trainerId) VALUES (N'$courseName','$trainerId'); SELECT SCOPE_IDENTITY()";
+    $query = "INSERT INTO course (courseName,description,price,portalId,trainerId) VALUES (N'$courseName','$description','$price','$portalId','$trainerId'); SELECT SCOPE_IDENTITY()";
 
   // $query = "insert into department (Title,CourseDescr,StartDate,StopDate,CoursePortalID,TrainerID,IsActive, CoursePrice) values('$Title','$CourseDescr','$StartDate','$StopDate','$CoursePortalID','$TrainerID','$IsActive', $CoursePrice);select SCOPE_IDENTITY()";
   $result = sqlsrv_query($conn, $query , array() , array("Scrollable" => "static")) or die( print_r( sqlsrv_errors(), true)) ;

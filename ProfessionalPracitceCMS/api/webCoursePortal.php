@@ -4,8 +4,8 @@
 	
 	if ($status == "one" )
 	{
-		$id = $_REQUEST["id"];
-		$query = "select * from portal where portalId=$id"   ;
+		$portalId = $_REQUEST["portalId"];
+		$query = "select * from portal where portalId=$portalId"   ;
 		$result= sqlsrv_query($conn, $query , array() , array("Scrollable" => "static")) or  die( print_r( sqlsrv_errors(), true)) ;
 			
 		$arr = array();
